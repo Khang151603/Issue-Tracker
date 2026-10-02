@@ -149,6 +149,8 @@ h2 {
 }
 
 .issue-list {
+  display: grid;
+  gap: 16px;
   margin-top: 31px;
 }
 
@@ -187,6 +189,13 @@ h2 {
 h3 {
   margin: 0;
   font-size: 17px;
+  overflow-wrap: anywhere;
+}
+
+.issue-meta {
+  margin: 12px 0 8px;
+  color: #4b5563;
+  font-size: 13px;
 }
 
 .issue-actions {

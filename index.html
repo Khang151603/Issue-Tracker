@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Issue tracker interface mockup." />
     <title>Issue Tracker</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/app.js" defer></script>
   </head>
   <body>
     <main class="page">
@@ -14,15 +15,15 @@
       </header>
 
       <section aria-label="Create issue" class="create-section">
-        <form class="issue-form">
+        <form id="todo-form" class="issue-form">
           <label class="form-field">
             <span>Title</span>
-            <input type="text" placeholder="Title ..." class="form-input" />
+            <input id="todo-title" name="title" type="text" placeholder="Title ..." class="form-input" required />
           </label>
 
           <label class="form-field">
             <span>Author</span>
-            <select class="form-input">
+            <select id="todo-author" name="author" class="form-input">
               <option>Khang</option>
               <option>Ronaldo</option>
               <option>Messi</option>
@@ -31,7 +32,7 @@
 
           <label class="form-field">
             <span>Severity</span>
-            <select class="form-input severity-input">
+            <select id="todo-severity" name="severity" class="form-input severity-input">
               <option>Low</option>
               <option>Medium</option>
               <option>High</option>
@@ -39,7 +40,7 @@
           </label>
 
           <div class="add-wrapper">
-            <button type="button" class="button add-button">Add</button>
+            <button id="add-button" type="submit" class="button add-button">Add</button>
           </div>
         </form>
       </section>
@@ -71,20 +72,8 @@
           </select>
         </label>
 
-        <div class="issue-list">
-          <article class="issue-card">
-            <div class="issue-card-header">
-              <span>1</span><span class="status-badge">new</span>
-            </div>
-            <div class="issue-card-body">
-              <h3>delectus aut autem</h3>
-              <div class="issue-actions">
-                <button type="button" class="button close-button">Close</button>
-                <button type="button" class="button delete-button">Delete</button>
-              </div>
-            </div>
-          </article>
-        </div>
+        <div id="todo-list" class="issue-list" aria-live="polite"></div>
+
       </section>
     </main>
   </body>
