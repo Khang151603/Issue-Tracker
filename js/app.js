@@ -18,7 +18,7 @@ const dataIssues = [
     title: "Check button labels",
     author: "Messi",
     severity: "Low",
-    status: "new",
+    status: "closed",
   },
 ];
 
@@ -30,10 +30,27 @@ const issueAuthorSelect = document.getElementById("todo-author");
 const issueSeveritySelect = document.getElementById("todo-severity");
 const issuesList = document.getElementById("todo-list");
 
+const allButton = document.querySelector(".all-button");
+const openButton = document.querySelector(".open-button");
+const closedButton = document.querySelector(".closed-button");
+
+let currentFilter = "All";
+
 function renderData() {
   issuesList.innerHTML = "";
 
-  dataIssues.forEach(function (issue) {
+  let filteredIssues = dataIssues;
+  if (currentFilter === "Open") {
+    filteredIssues = dataIssues.filter(function (issue) {
+      return issue.status === "new";
+    });
+  } else if (currentFilter === "Close") {
+    filteredIssues = dataIssues.filter(function (issue) {
+      return issue.status === "closed";
+    });
+  }
+
+  filteredIssues.forEach(function (issue) {
     issuesList.innerHTML += `
       <article class="issue-card">
         <div class="issue-card-header">
@@ -111,6 +128,23 @@ function deleteTodo(issueId) {
 
   renderData();
 }
+
+function setFilter(filterType) {
+  currentFilter = filterType;
+  renderData();
+}
+
+allButton.addEventListener("click", function () {
+  setFilter("All");
+});
+
+openButton.addEventListener("click", function () {
+  setFilter("Open");
+});
+
+closedButton.addEventListener("click", function () {
+  setFilter("Close");
+});
 
 addForm.addEventListener("submit", addTodo);
 
