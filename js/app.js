@@ -33,24 +33,66 @@ const issuesList = document.getElementById("todo-list");
 const allButton = document.querySelector(".all-button");
 const openButton = document.querySelector(".open-button");
 const closedButton = document.querySelector(".closed-button");
+const orderSelect = document.querySelector(".order-select");
 
 let currentFilter = "All";
+let currentOrder = "Choose...";
 
-function renderData() {
-  issuesList.innerHTML = "";
-
-  let filteredIssues = dataIssues;
+// Filter issue
+function filterIssues() {
   if (currentFilter === "Open") {
-    filteredIssues = dataIssues.filter(function (issue) {
+    return dataIssues.filter(function (issue) {
       return issue.status === "new";
     });
   } else if (currentFilter === "Close") {
-    filteredIssues = dataIssues.filter(function (issue) {
+    return dataIssues.filter(function (issue) {
       return issue.status === "closed";
+    });
+  } else {
+    return dataIssues.slice();
+  }
+}
+
+// Order issues
+function orderIssues(issues) {
+  if (currentOrder === "ASC") {
+    issues.sort(function (a, b) {
+      if (a.title.toLowerCase() < b.title.toLowerCase()) {
+        return -1;
+      }
+
+      if (a.title.toLowerCase() > b.title.toLowerCase()) {
+        return 1;
+      }
+
+      return 0;
+    });
+  } else if (currentOrder === "DESC") {
+    issues.sort(function (a, b) {
+      if (a.title.toLowerCase() > b.title.toLowerCase()) {
+        return -1;
+      }
+
+      if (a.title.toLowerCase() < b.title.toLowerCase()) {
+        return 1;
+      }
+
+      return 0;
     });
   }
 
-  filteredIssues.forEach(function (issue) {
+  return issues;
+}
+
+// Render issue
+function renderData() {
+  issuesList.innerHTML = "";
+
+  let filteredIssues = filterIssues();
+
+  let orderedIssues = orderIssues(filteredIssues);
+
+  orderedIssues.forEach(function (issue) {
     issuesList.innerHTML += `
       <article class="issue-card">
         <div class="issue-card-header">
@@ -91,6 +133,7 @@ function renderData() {
   });
 }
 
+// Add issue
 function addTodo(event) {
   event.preventDefault();
 
@@ -113,6 +156,7 @@ function addTodo(event) {
   issueSeveritySelect.selectedIndex = 0;
 }
 
+// Delete issue
 function deleteTodo(issueId) {
   function checkIssue(issue) {
     return issue.id === issueId;
@@ -129,6 +173,7 @@ function deleteTodo(issueId) {
   renderData();
 }
 
+// Filter button
 function setFilter(filterType) {
   currentFilter = filterType;
   renderData();
@@ -144,6 +189,11 @@ openButton.addEventListener("click", function () {
 
 closedButton.addEventListener("click", function () {
   setFilter("Close");
+});
+
+orderSelect.addEventListener("change", function (event) {
+  currentOrder = event.target.value;
+  renderData();
 });
 
 addForm.addEventListener("submit", addTodo);
