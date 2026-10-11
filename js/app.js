@@ -1,3 +1,4 @@
+// 1. Data và DOM
 const dataIssues = [
   {
     id: 1,
@@ -34,11 +35,13 @@ const allButton = document.querySelector(".all-button");
 const openButton = document.querySelector(".open-button");
 const closedButton = document.querySelector(".closed-button");
 const orderSelect = document.querySelector(".order-select");
+const searchInput = document.querySelector(".search-input");
 
 let currentFilter = "All";
 let currentOrder = "Choose...";
+let currentSearch = "";
 
-// Filter issue
+// 2. Filter
 function filterIssues() {
   if (currentFilter === "Open") {
     return dataIssues.filter(function (issue) {
@@ -53,7 +56,18 @@ function filterIssues() {
   }
 }
 
-// Order issues
+// 3. Search
+function searchIssues(issues) {
+  if (currentSearch.trim() === "") {
+    return issues;
+  }
+
+  return issues.filter(function (issue) {
+    return issue.title.toLowerCase().includes(currentSearch.toLowerCase());
+  });
+}
+
+// 4. Order
 function orderIssues(issues) {
   if (currentOrder === "ASC") {
     issues.sort(function (a, b) {
@@ -84,13 +98,55 @@ function orderIssues(issues) {
   return issues;
 }
 
-// Render issue
+// 5. Add
+function addTodo(event) {
+  event.preventDefault();
+
+  const newIssue = {
+    id: nextIssueId,
+    title: issueTitleInput.value,
+    author: issueAuthorSelect.value,
+    severity: issueSeveritySelect.value,
+    status: "new",
+  };
+
+  dataIssues.unshift(newIssue);
+
+  nextIssueId = nextIssueId + 1;
+
+  renderData();
+
+  issueTitleInput.value = "";
+  issueAuthorSelect.selectedIndex = 0;
+  issueSeveritySelect.selectedIndex = 0;
+}
+
+// 6. Delete
+function deleteTodo(issueId) {
+  function checkIssue(issue) {
+    return issue.id === issueId;
+  }
+
+  const index = dataIssues.findIndex(checkIssue);
+
+  if (index === -1) {
+    return;
+  }
+
+  dataIssues.splice(index, 1);
+
+  renderData();
+}
+
+// 7. Render
 function renderData() {
   issuesList.innerHTML = "";
 
   let filteredIssues = filterIssues();
 
-  let orderedIssues = orderIssues(filteredIssues);
+  let searchedIssues = searchIssues(filteredIssues);
+
+  let orderedIssues = orderIssues(searchedIssues);
 
   orderedIssues.forEach(function (issue) {
     issuesList.innerHTML += `
@@ -133,47 +189,7 @@ function renderData() {
   });
 }
 
-// Add issue
-function addTodo(event) {
-  event.preventDefault();
-
-  const newIssue = {
-    id: nextIssueId,
-    title: issueTitleInput.value,
-    author: issueAuthorSelect.value,
-    severity: issueSeveritySelect.value,
-    status: "new",
-  };
-
-  dataIssues.unshift(newIssue);
-
-  nextIssueId = nextIssueId + 1;
-
-  renderData();
-
-  issueTitleInput.value = "";
-  issueAuthorSelect.selectedIndex = 0;
-  issueSeveritySelect.selectedIndex = 0;
-}
-
-// Delete issue
-function deleteTodo(issueId) {
-  function checkIssue(issue) {
-    return issue.id === issueId;
-  }
-
-  const index = dataIssues.findIndex(checkIssue);
-
-  if (index === -1) {
-    return;
-  }
-
-  dataIssues.splice(index, 1);
-
-  renderData();
-}
-
-// Filter button
+// 8. Event listener
 function setFilter(filterType) {
   currentFilter = filterType;
   renderData();
@@ -193,6 +209,11 @@ closedButton.addEventListener("click", function () {
 
 orderSelect.addEventListener("change", function (event) {
   currentOrder = event.target.value;
+  renderData();
+});
+
+searchInput.addEventListener("input", function (event) {
+  currentSearch = event.target.value;
   renderData();
 });
 
