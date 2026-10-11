@@ -1,4 +1,5 @@
 // 1. Data và DOM
+// call api https://jsonplaceholder.typicode.com/todos?_limit=3 -> get default data issues
 const dataIssues = [
   {
     id: 1,
@@ -43,17 +44,30 @@ let currentSearch = "";
 
 // 2. Filter
 function filterIssues() {
+  // if (currentFilter === "Open") {
+  //   return dataIssues.filter(function (issue) {
+  //     return issue.status === "new";
+  //   });
+  // } else if (currentFilter === "Close") {
+  //   return dataIssues.filter(function (issue) {
+  //     return issue.status === "closed";
+  //   });
+  // } else {
+  //   return dataIssues.slice();
+  // }
+
   if (currentFilter === "Open") {
     return dataIssues.filter(function (issue) {
       return issue.status === "new";
     });
-  } else if (currentFilter === "Close") {
+  }
+  if (currentFilter === "Close") {
     return dataIssues.filter(function (issue) {
       return issue.status === "closed";
     });
-  } else {
-    return dataIssues.slice();
-  }
+  } 
+
+  return dataIssues.slice();
 }
 
 // 3. Search
@@ -81,7 +95,9 @@ function orderIssues(issues) {
 
       return 0;
     });
-  } else if (currentOrder === "DESC") {
+  } 
+  
+  if (currentOrder === "DESC") {
     issues.sort(function (a, b) {
       if (a.title.toLowerCase() > b.title.toLowerCase()) {
         return -1;
@@ -123,17 +139,17 @@ function addTodo(event) {
 
 // 6. Delete
 function deleteTodo(issueId) {
-  function checkIssue(issue) {
+  function getIndexIssue(issue) {
     return issue.id === issueId;
   }
 
-  const index = dataIssues.findIndex(checkIssue);
+  const indexIssue = dataIssues.findIndex(getIndexIssue);
 
-  if (index === -1) {
+  if (indexIssue === -1) {
     return;
   }
 
-  dataIssues.splice(index, 1);
+  dataIssues.splice(indexIssue, 1);
 
   renderData();
 }
